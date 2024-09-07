@@ -5,7 +5,6 @@
 //  Created by chenbao on 9/7/24.
 //
 
-// MainWindow.swift
 import AppKit
 import SwiftUI
 
@@ -25,17 +24,23 @@ class MainWindow: NSWindow {
                 .titled, // 显示标题栏
                 .closable, // 允许关闭窗口
                 .miniaturizable, // 允许最小化窗口
+
                 .fullSizeContentView, // 允许内容视图占据整个窗口，包括标题栏,
                 .resizable, // 允许调整窗口大小     // frame(maxWidth: .infinity, maxHeight: .infinity)
-                .borderless, // 无边框
+                //                .borderless, // 无边框
+
             ],
             backing: .buffered,
             defer: false
         )
 
-        self.titlebarAppearsTransparent = true // 设置 titlebarAppearsTransparent 为 true，使标题栏透明
-        self.isOpaque = false // 让整个窗口都变透明
-        self.backgroundColor = .clear
+        // 设置 titlebarAppearsTransparent 为 true，使标题栏透明
+        self.titlebarAppearsTransparent = true
+        // 让整个窗口都变透明
+        self.isOpaque = false
+
+        //        self.backgroundColor = .clear // 设置成透明的之后会有严重的卡断,
+
         self.titleVisibility = .hidden // 设置 titleVisibility 为 .hidden，隐藏标题, 保留 close button
 
         // 设置最小尺寸
@@ -43,32 +48,10 @@ class MainWindow: NSWindow {
 
         // 设置 contentView
         self.contentView = NSHostingView(rootView: ContentView())
-    }
-}
 
-struct ContentView: View {
-    var body: some View {
-        VStack(spacing: 0) {
-            Button(action: {
-            }, label: {
-                Text("Button")
-            })
-            .border(Color.black, width: 2)
-
-            Text("你好，世界！")
-                .frame(maxHeight: .infinity)
-        }
-
-        .background {
-            AsyncImage(url: .init(URL(fileURLWithPath: "/Users/chenbao/Downloads/林黛玉武侠图-2.jpeg"))) { img in
-                img.resizable()
-                    .scaledToFill()
-                    .opacity(0.2)
-            } placeholder: {
-                EmptyView()
-            }
-        }
-        .ignoresSafeArea(.all)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        // 隐藏左上角的三个 红绿灯 按钮.
+        self.standardWindowButton(.closeButton)?.isHidden = true
+        self.standardWindowButton(.miniaturizeButton)?.isHidden = true
+        self.standardWindowButton(.zoomButton)?.isHidden = true
     }
 }

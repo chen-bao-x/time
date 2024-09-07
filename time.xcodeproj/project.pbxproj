@@ -12,6 +12,7 @@
 		E7C6D1892C8C3384004E0AF3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E7C6D1882C8C3384004E0AF3 /* Assets.xcassets */; };
 		E7C6D1942C8C3439004E0AF3 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C6D1932C8C3439004E0AF3 /* main.swift */; };
 		E7C6D1962C8C3479004E0AF3 /* MainWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C6D1952C8C3479004E0AF3 /* MainWindow.swift */; };
+		E7C6D1992C8C747A004E0AF3 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C6D1982C8C747A004E0AF3 /* ContentView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +23,7 @@
 		E7C6D18D2C8C3384004E0AF3 /* time.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = time.entitlements; sourceTree = "<group>"; };
 		E7C6D1932C8C3439004E0AF3 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		E7C6D1952C8C3479004E0AF3 /* MainWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWindow.swift; sourceTree = "<group>"; };
+		E7C6D1982C8C747A004E0AF3 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +58,7 @@
 			children = (
 				E7C6D1842C8C3381004E0AF3 /* AppDelegate.swift */,
 				E7C6D1952C8C3479004E0AF3 /* MainWindow.swift */,
+				E7C6D1982C8C747A004E0AF3 /* ContentView.swift */,
 				E7C6D1932C8C3439004E0AF3 /* main.swift */,
 				E7C6D1862C8C3381004E0AF3 /* ViewController.swift */,
 				E7C6D1882C8C3384004E0AF3 /* Assets.xcassets */,
@@ -134,6 +137,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E7C6D1962C8C3479004E0AF3 /* MainWindow.swift in Sources */,
+				E7C6D1992C8C747A004E0AF3 /* ContentView.swift in Sources */,
 				E7C6D1872C8C3381004E0AF3 /* ViewController.swift in Sources */,
 				E7C6D1852C8C3381004E0AF3 /* AppDelegate.swift in Sources */,
 				E7C6D1942C8C3439004E0AF3 /* main.swift in Sources */,
