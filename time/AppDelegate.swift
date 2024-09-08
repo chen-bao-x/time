@@ -27,7 +27,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        self.mainWindow.center() // 将窗口置于屏幕正中间
+        self.mainWindow.center()  // 将窗口置于屏幕正中间
 
         self.mainWindow.makeKeyAndOrderFront(nil)
         self.mainWindow.orderFrontRegardless()
@@ -48,7 +48,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func show() {
-        self.mainWindow.center() // 将窗口置于屏幕正中间
+        self.mainWindow.center()  // 将窗口置于屏幕正中间
 
         // Moves the window to the front of the screen list, within its level, and makes it the key window; that is, it shows the window.
         self.mainWindow.makeKeyAndOrderFront(nil)
@@ -64,28 +64,29 @@ extension AppDelegate {
         _ = NSEvent.addLocalMonitorForEvents(matching: .keyDown) {
             [weak self] event in
 
-            if event.modifierFlags.contains(.command) && event.keyCode == 0 { // Command + Space
+            if event.modifierFlags.contains(.command) && event.keyCode == 0 {  // Command + Space
                 self?.show()
-                return nil // 就是我们需要的快捷键, 截断事件.
+                return nil  // 就是我们需要的快捷键, 截断事件.
             }
 
-            if event.modifierFlags.contains(.command) && event.keyCode == keycode.w.rawValue { // Command + Space
+            if event.modifierFlags.contains(.command) && event.keyCode == keycode.w.rawValue {  // Command + Space
                 self?.mainWindow.close()
-                return nil // 就是我们需要的快捷键, 截断事件.
+                return nil  // 就是我们需要的快捷键, 截断事件.
             }
 
             if event.modifierFlags.contains([.command, .control])
-                && event.keyCode == keycode.f.rawValue {
+                && event.keyCode == keycode.f.rawValue
+            {
                 self?.mainWindow.toggleFullScreen(nil)
-                return nil // 就是我们需要的快捷键, 截断事件.
+                return nil  // 就是我们需要的快捷键, 截断事件.
             }
 
             if event.modifierFlags.contains([.command]) && event.keyCode == keycode.m.rawValue {
                 self?.mainWindow.miniaturize(nil)
-                return nil // 就是我们需要的快捷键, 截断事件.
+                return nil  // 就是我们需要的快捷键, 截断事件.
             }
 
-            return event // 不是我们需要的快捷键, 交友其他后续的 monitor 们来处理
+            return event  // 不是我们需要的快捷键, 交友其他后续的 monitor 们来处理
         }
 
         // 鼠标移动到左上角时显示 贯标按钮
@@ -102,13 +103,6 @@ extension AppDelegate {
                 self?.mainWindow.standardWindowButton(.zoomButton)?.isHidden = true
             }
 
-            print(
-                """
-                x: \(event.locationInWindow.x)
-                y: \(event.locationInWindow.y)
-                """
-            )
-
             func l(x: Double, y: Double) -> Bool {
                 let windowHeight = self?.mainWindow.frame.height ?? 0
 
@@ -119,7 +113,6 @@ extension AppDelegate {
                 return (a && b)
             }
 
-            print(event.locationInWindow)
             return event
         }
     }

@@ -19,6 +19,16 @@ struct ContentView: View {
     @Environment(\.colorScheme) var colorScheme
     var body: some View {
         VStack(spacing: 0) {
+            Button {
+                if appDelegate.mainWindow.backgroundColor == .clear {
+                    appDelegate.mainWindow.backgroundColor = .windowBackgroundColor
+                } else {
+                    appDelegate.mainWindow.backgroundColor = .clear
+                }
+
+            } label: {
+                Text("click")
+            }
             Group {
                 Text(week(date: Date()))
                     .foregroundColor(.gray)
@@ -42,7 +52,7 @@ struct ContentView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
 
         .background {
-            colorScheme == .dark ? Color.black : Color.white
+//            colorScheme == .dark ? Color.black : Color.white
             // AsyncImage(url: .init(URL(fileURLWithPath: "/Users/chenbao/Downloads/林黛玉武侠图-2.jpeg"))) {
             //     img in
             //     img.resizable()
@@ -54,9 +64,6 @@ struct ContentView: View {
             // }
         }
         .ignoresSafeArea(.all)
-        //        .overlay(alignment: .topLeading) {
-        //            CloseButtons()
-        //        }
     }
 }
 
@@ -120,8 +127,6 @@ struct WV: View {
         WebView()
             .clipped()
             .edgesIgnoringSafeArea(.all)
-
-        //            .border(Color.blue, width: 2)
     }
 
     struct WebView: NSViewRepresentable {
@@ -132,7 +137,7 @@ struct WV: View {
         init() {
             let webConfiguration = WKWebViewConfiguration()
             self.webView = WKWebView(frame: .zero, configuration: webConfiguration)
-            webView.allowsMagnification = true  // 允许双指啮合缩放手势.
+            self.webView.allowsMagnification = true // 允许双指啮合缩放手势.
         }
 
         func makeNSView(context: Context) -> WKWebView {
