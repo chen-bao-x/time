@@ -8,21 +8,23 @@
 import Cocoa
 
 class AppDelegate: NSObject, NSApplicationDelegate {
-    let mainWindow: MainWindow!
+//    let mainWindow: MainWindow!
+    let mainWindow: fullScreenCoverWindow!
 
     override init() {
         // 获取屏幕尺寸
-        let screen = NSScreen.main ?? NSScreen.screens[0]
-        let screenSize = screen.visibleFrame.size
+//        let screen = NSScreen.main ?? NSScreen.screens[0]
+//        let screenSize = screen.frame.size
+//
+////         计算窗口的合适尺寸
+//        let windowWidth = min(screenSize.width * 0.8, 970)
+//        let windowHeight = min(screenSize.height * 0.8, 640)
 
-        // 计算窗口的合适尺寸
-        let windowWidth = min(screenSize.width * 0.8, 970)
-        let windowHeight = min(screenSize.height * 0.8, 640)
-
-        // 创建 MainWindow 实例并设置合适的尺寸
-        self.mainWindow = MainWindow()
-        self.mainWindow.setContentSize(NSSize(width: windowWidth, height: windowHeight))
-
+//         创建 MainWindow 实例并设置合适的尺寸
+//        self.mainWindow = MainWindow()
+        self.mainWindow = fullScreenCoverWindow()
+//        self.mainWindow.setContentSize(NSSize(width: windowWidth, height: windowHeight))
+        
         super.init()
     }
 
