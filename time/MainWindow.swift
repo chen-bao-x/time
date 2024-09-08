@@ -27,7 +27,7 @@ class MainWindow: NSWindow {
 
                 .fullSizeContentView, // 允许内容视图占据整个窗口，包括标题栏,
                 .resizable, // 允许调整窗口大小     // frame(maxWidth: .infinity, maxHeight: .infinity)
-                //                .borderless, // 无边框
+                .borderless, // 无边框
 
             ],
             backing: .buffered,
@@ -47,7 +47,7 @@ class MainWindow: NSWindow {
         self.minSize = NSSize(width: 400, height: 300)
 
         // 设置 contentView
-        self.contentView = NSHostingView(rootView: ContentView())
+        self.contentView = NSHostingView(rootView: RootView())
 
         // 隐藏左上角的三个 红绿灯 按钮.
         self.standardWindowButton(.closeButton)?.isHidden = true

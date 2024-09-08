@@ -63,6 +63,7 @@ extension AppDelegate {
 
         _ = NSEvent.addLocalMonitorForEvents(matching: .keyDown) {
             [weak self] event in
+
             if event.modifierFlags.contains(.command) && event.keyCode == 0 { // Command + Space
                 self?.show()
                 return nil // 就是我们需要的快捷键, 截断事件.
@@ -73,18 +74,53 @@ extension AppDelegate {
                 return nil // 就是我们需要的快捷键, 截断事件.
             }
 
-            if event.modifierFlags.contains([.command, .control]) && event.keyCode == keycode.f.rawValue {
+            if event.modifierFlags.contains([.command, .control])
+                && event.keyCode == keycode.f.rawValue {
                 self?.mainWindow.toggleFullScreen(nil)
                 return nil // 就是我们需要的快捷键, 截断事件.
             }
-            
-            
+
             if event.modifierFlags.contains([.command]) && event.keyCode == keycode.m.rawValue {
                 self?.mainWindow.miniaturize(nil)
                 return nil // 就是我们需要的快捷键, 截断事件.
             }
-            
+
             return event // 不是我们需要的快捷键, 交友其他后续的 monitor 们来处理
+        }
+
+        // 鼠标移动到左上角时显示 贯标按钮
+        _ = NSEvent.addLocalMonitorForEvents(matching: .mouseMoved) {
+            [weak self] event in
+
+            if l(x: event.locationInWindow.x, y: event.locationInWindow.y) {
+                self?.mainWindow.standardWindowButton(.closeButton)?.isHidden = false
+                self?.mainWindow.standardWindowButton(.miniaturizeButton)?.isHidden = false
+                self?.mainWindow.standardWindowButton(.zoomButton)?.isHidden = false
+            } else {
+                self?.mainWindow.standardWindowButton(.closeButton)?.isHidden = true
+                self?.mainWindow.standardWindowButton(.miniaturizeButton)?.isHidden = true
+                self?.mainWindow.standardWindowButton(.zoomButton)?.isHidden = true
+            }
+
+            print(
+                """
+                x: \(event.locationInWindow.x)
+                y: \(event.locationInWindow.y)
+                """
+            )
+
+            func l(x: Double, y: Double) -> Bool {
+                let windowHeight = self?.mainWindow.frame.height ?? 0
+
+                let a = (x < 80) && (x > 0)
+
+                let b = (y > windowHeight - 40) && (y < windowHeight)
+
+                return (a && b)
+            }
+
+            print(event.locationInWindow)
+            return event
         }
     }
 }

@@ -6,6 +6,14 @@
 //
 
 import SwiftUI
+import WebKit
+
+struct RootView: View {
+    var body: some View {
+        ContentView()
+        // WV()
+    }
+}
 
 struct ContentView: View {
     @Environment(\.colorScheme) var colorScheme
@@ -41,7 +49,7 @@ struct ContentView: View {
             //         .scaledToFill()
 
             // } placeholder: {
-            
+
             //     EmptyView()
             // }
         }
@@ -105,4 +113,49 @@ func week(date: Date) -> String {
 
     let weekDay = formater.string(from: date)
     return weekDay
+}
+
+struct WV: View {
+    var body: some View {
+        WebView()
+            .clipped()
+            .edgesIgnoringSafeArea(.all)
+
+        //            .border(Color.blue, width: 2)
+    }
+
+    struct WebView: NSViewRepresentable {
+        typealias NSViewType = WKWebView
+
+        let webView: WKWebView
+
+        init() {
+            let webConfiguration = WKWebViewConfiguration()
+            self.webView = WKWebView(frame: .zero, configuration: webConfiguration)
+            webView.allowsMagnification = true  // 允许双指啮合缩放手势.
+        }
+
+        func makeNSView(context: Context) -> WKWebView {
+            return self.webView
+        }
+
+        func updateNSView(_ nsView: WKWebView, context: Context) {
+            //  let htmlPath = "/Users/chenbao/Downloads/cml_nom/.test/out.html"
+
+            //  let url = URL(fileURLWithPath: htmlPath)
+
+            //  let request = URLRequest(url: url)
+            //  self.webView.load(request)
+            //            self.webView.loadFileURL(url, allowingReadAccessTo: url)
+
+            // if let data = try? String.init(contentsOf: url) {
+
+            //     self.webView.loadHTMLString(data, baseURL: url)
+            // }···
+
+            let myURL = URL(string: "https://www.apple.com")
+            let myRequest = URLRequest(url: myURL!)
+            self.webView.load(myRequest)
+        }
+    }
 }
