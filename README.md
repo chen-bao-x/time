@@ -10,4 +10,4 @@
 也可以将 time.dmg   
 复制到你的 Application 文件夹夹内, 这样就可以同耕哦 Spotlight 或者 Raycast 来打开 time.app 了.
 
-![image](./preview.png)
+![image](./preview.jpg)
