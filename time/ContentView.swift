@@ -11,35 +11,8 @@ import WebKit
 struct RootView: View {
     var body: some View {
         ContentView()
-            .onAppear {
-//                setupFullScreenAndTopMost()
-            }
-        // WV()
-    }
 
-    private func setupFullScreenAndTopMost() {
-//        DispatchQueue.main.async {
-//            if let window = appDelegate.mainWindow {
-//                
-//                // 当用户切换桌面时，将我的 app 移动到那个桌面
-//                
-////                window.moveToActiveSpace(allowOverFullscreen: true) {
-////                    print("completed ")
-////                }
-//                
-//                // 获取屏幕尺寸
-//                let screen = NSScreen.main ?? NSScreen.screens[0]
-//        //        let screenSize = screen.visibleFrame.size
-//
-//                let screenFrame = screen.frame // 这里使用 frame 而不是 visibleFrame
-//                let fullFrame = NSRect(
-//                    x: screenFrame.origin.x, y: screenFrame.origin.y, width: screenFrame.width,
-//                    height: screenFrame.height)
-//
-//                window.setFrame(fullFrame, display: true, animate: false)
-//                
-//            }
-//        }
+        // WV()
     }
 }
 
@@ -78,9 +51,8 @@ struct ContentView: View {
         }
 
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-
         .background {
-            //            colorScheme == .dark ? Color.black : Color.white
+//            colorScheme == .dark ? Color.black : Color.white
             // AsyncImage(url: .init(URL(fileURLWithPath: "/Users/chenbao/Downloads/林黛玉武侠图-2.jpeg"))) {
             //     img in
             //     img.resizable()

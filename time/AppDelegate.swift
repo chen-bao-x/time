@@ -6,55 +6,56 @@
 //
 //
 import Cocoa
+import Combine
 
 class AppDelegate: NSObject, NSApplicationDelegate {
-//    let mainWindow: MainWindow!
-    let mainWindow: fullScreenCoverWindow!
+    //    let mainWindow: MainWindow!
+    var mainWindow: NSWindow // MainWindow | fullScreenCoverWindow
 
     override init() {
-        // 获取屏幕尺寸
-//        let screen = NSScreen.main ?? NSScreen.screens[0]
-//        let screenSize = screen.frame.size
-//
-////         计算窗口的合适尺寸
-//        let windowWidth = min(screenSize.width * 0.8, 970)
-//        let windowHeight = min(screenSize.height * 0.8, 640)
-
-//         创建 MainWindow 实例并设置合适的尺寸
-//        self.mainWindow = MainWindow()
         self.mainWindow = fullScreenCoverWindow()
-//        self.mainWindow.setContentSize(NSSize(width: windowWidth, height: windowHeight))
-        
         super.init()
     }
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        self.mainWindow.center()  // 将窗口置于屏幕正中间
-
-        self.mainWindow.makeKeyAndOrderFront(nil)
-        self.mainWindow.orderFrontRegardless()
+        self.show()
 
         self.setupGlobalShortcut()
     }
 
+    // 当应用程序终止之前调用.
     func applicationWillTerminate(_ aNotification: Notification) {
-        // Insert code here to tear down your application
     }
 
     func applicationSupportsSecureRestorableState(_ app: NSApplication) -> Bool {
         return true
     }
 
+    // 当最后一个窗口关闭时, 应用程序应该终止.
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
         return true
     }
 
+    // app active 之后调用.
+    func applicationDidBecomeActive(_ notification: Notification) {
+    }
+
+    // app deactive 之前调用.
+    func applicationWillResignActive(_ notification: Notification) {
+        //  如果是 fullScreenCoverWindow 的话,
+        if self.mainWindow is fullScreenCoverWindow {
+            //  就始终保持 active.
+            app.activate(ignoringOtherApps: true)
+        }
+    }
+
     func show() {
-        self.mainWindow.center()  // 将窗口置于屏幕正中间
+        self.mainWindow.center() // 将窗口置于屏幕正中间
 
-        // Moves the window to the front of the screen list, within its level, and makes it the key window; that is, it shows the window.
+        // 该应用程序不会出现在 Dock 中，也没有菜单栏，但可以通过编程方式或单击其某个窗口来激活它。
+        app.setActivationPolicy(.accessory)
+
         self.mainWindow.makeKeyAndOrderFront(nil)
-
         self.mainWindow.orderFrontRegardless()
     }
 }
@@ -66,29 +67,35 @@ extension AppDelegate {
         _ = NSEvent.addLocalMonitorForEvents(matching: .keyDown) {
             [weak self] event in
 
-            if event.modifierFlags.contains(.command) && event.keyCode == 0 {  // Command + Space
+            if event.modifierFlags.contains(.command) && event.keyCode == 0 { // Command + Space
                 self?.show()
-                return nil  // 就是我们需要的快捷键, 截断事件.
+                return nil // 就是我们需要的快捷键, 截断事件.
             }
 
-            if event.modifierFlags.contains(.command) && event.keyCode == keycode.w.rawValue {  // Command + Space
+            if event.modifierFlags.contains(.command) && event.keyCode == keycode.w.rawValue { // Command + Space
                 self?.mainWindow.close()
-                return nil  // 就是我们需要的快捷键, 截断事件.
+                return nil // 就是我们需要的快捷键, 截断事件.
             }
 
             if event.modifierFlags.contains([.command, .control])
-                && event.keyCode == keycode.f.rawValue
-            {
+                && event.keyCode == keycode.f.rawValue {
                 self?.mainWindow.toggleFullScreen(nil)
-                return nil  // 就是我们需要的快捷键, 截断事件.
+                return nil // 就是我们需要的快捷键, 截断事件.
             }
 
             if event.modifierFlags.contains([.command]) && event.keyCode == keycode.m.rawValue {
                 self?.mainWindow.miniaturize(nil)
-                return nil  // 就是我们需要的快捷键, 截断事件.
+                return nil // 就是我们需要的快捷键, 截断事件.
             }
 
-            return event  // 不是我们需要的快捷键, 交友其他后续的 monitor 们来处理
+            // 如果是全屏的话, 按任意键
+            if let self = self, self.mainWindow is fullScreenCoverWindow {
+                self.mainWindow.close()
+
+                return nil
+            }
+
+            return event // 不是我们需要的快捷键, 交友其他后续的 monitor 们来处理
         }
 
         // 鼠标移动到左上角时显示 贯标按钮
