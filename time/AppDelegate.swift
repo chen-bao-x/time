@@ -1,3 +1,4 @@
+
 //
 //  AppDelegate.swift
 //  time
@@ -5,22 +6,36 @@
 //  Created by chenbao on 9/7/24.
 //
 //
+import AppKit
+import Carbon
 import Cocoa
 import Combine
+import HotKey
 
 class AppDelegate: NSObject, NSApplicationDelegate {
-    //    let mainWindow: MainWindow!
-    var mainWindow: NSWindow // MainWindow | fullScreenCoverWindow
+    var mainWindow: NSWindow! // MainWindow | fullScreenCoverWindow
+
+    var statusBarItem: NSStatusItem! // 要把添加的到 `NSStatusBar.system` 的 statusBarItem store 起来, 才能在 菜单栏图标区 显示此 app 的 `菜单栏图标`.
+
+    private var hotKey: HotKey?
 
     override init() {
-        self.mainWindow = fullScreenCoverWindow()
         super.init()
+
+        self.mainWindow = fullScreenCoverWindow()
+
+        let h = HotKey(keyCombo: KeyCombo(key: .s, modifiers: [.control]))
+        h.keyDownHandler = { [weak self] in self?.show() }
+        self.hotKey = h
     }
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         self.show()
-
-        self.setupGlobalShortcut()
+        self.setupLocalShortcut()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            self.addMennubarIter()
+        }
+        app.activate(ignoringOtherApps: true)
     }
 
     // 当应用程序终止之前调用.
@@ -33,7 +48,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     // 当最后一个窗口关闭时, 应用程序应该终止.
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
-        return true
+        return false
     }
 
     // app active 之后调用.
@@ -43,13 +58,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     // app deactive 之前调用.
     func applicationWillResignActive(_ notification: Notification) {
         //  如果是 fullScreenCoverWindow 的话,
-        if self.mainWindow is fullScreenCoverWindow {
-            //  就始终保持 active.
-            app.activate(ignoringOtherApps: true)
-        }
+        //        if self.mainWindow is fullScreenCoverWindow {
+        //            //  就始终保持 active.
+        //            app.activate(ignoringOtherApps: true)
+        //        }
     }
 
     func show() {
+        // 隐藏菜单栏
+        NSMenu.setMenuBarVisible(false) // 当 fullScreenCoverWindow 全屏时隐藏菜单栏.
+
         self.mainWindow.center() // 将窗口置于屏幕正中间
 
         // 该应用程序不会出现在 Dock 中，也没有菜单栏，但可以通过编程方式或单击其某个窗口来激活它。
@@ -57,23 +75,75 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         self.mainWindow.makeKeyAndOrderFront(nil)
         self.mainWindow.orderFrontRegardless()
+
+        NSApp.activate(ignoringOtherApps: true)
+
+        app.unhide(nil) // 显示窗口
+    }
+
+    func hide() {
+        app.hide(nil) // 隐藏窗口
+
+        // 显示菜单栏
+        NSMenu.setMenuBarVisible(true) // 当 fullScreenCoverWindow 全屏时隐藏菜单栏.
+    }
+
+    @objc func option1Action() {
+        // 处理选项1的逻辑
+        self.show()
+    }
+
+    @objc func option2Action() {
+        // 处理选项2的逻辑
     }
 }
 
 extension AppDelegate {
-    private func setupGlobalShortcut() {
-        // 全局快捷键  addGlobalMonitorForEvents
+    func addMennubarIter() {
+        let systemStatusBar = NSStatusBar.system
 
+        self.statusBarItem = systemStatusBar.statusItem(withLength: NSStatusItem.squareLength)
+        if let button = self.statusBarItem.button {
+            // button.image = NSImage(
+            //     systemSymbolName: "command.square.fill", accessibilityDescription: nil)
+            //                       button.image = NSImage(
+            //                           contentsOf: URL(fileURLWithPath: "/Users/chenbao/Downloads/林黛玉武侠图-2.jpeg"))
+            button.title = "helo"
+        }
+
+        let menu = NSMenu(title: "菜单")
+        menu.addItem(
+            NSMenuItem(title: "选项1", action: #selector(self.option1Action), keyEquivalent: ""))
+        menu.addItem(
+            NSMenuItem(title: "选项2", action: #selector(self.option2Action), keyEquivalent: ""))
+        menu.addItem(NSMenuItem.separator())
+        menu.addItem(
+            NSMenuItem(
+                title: "退出", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
+
+        self.statusBarItem.menu = menu
+    }
+}
+
+extension AppDelegate {
+    private func setupLocalShortcut() {
         _ = NSEvent.addLocalMonitorForEvents(matching: .keyDown) {
             [weak self] event in
 
-            if event.modifierFlags.contains(.command) && event.keyCode == keycode.t.rawValue  { // Option + T
+            // 按下 command + H 隐藏窗口
+            if event.modifierFlags.contains(.command) && event.keyCode == keycode.h.rawValue {
+                self?.hide()
+                return nil // 就是我们需要的快捷键, 截断事件.
+            }
+
+            if event.modifierFlags.contains(.command) && event.keyCode == keycode.t.rawValue { // Option + T
                 self?.show()
                 return nil // 就是我们需要的快捷键, 截断事件.
             }
 
             if event.modifierFlags.contains(.command) && event.keyCode == keycode.w.rawValue { // Command + Space
-                self?.mainWindow.close()
+                //                self?.mainWindow.close()
+                self?.hide()
                 return nil // 就是我们需要的快捷键, 截断事件.
             }
 
@@ -90,7 +160,13 @@ extension AppDelegate {
 
             // 如果是全屏的话, 按任意键
             if let self = self, self.mainWindow is fullScreenCoverWindow {
-                self.mainWindow.close()
+                // self.mainWindow.close()
+
+                if app.isHidden {
+                    self.show()
+                } else {
+                    self.hide()
+                }
 
                 return nil
             }

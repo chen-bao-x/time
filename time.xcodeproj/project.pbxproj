@@ -14,6 +14,7 @@
 		E7C6D1942C8C3439004E0AF3 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C6D1932C8C3439004E0AF3 /* main.swift */; };
 		E7C6D1962C8C3479004E0AF3 /* MainWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C6D1952C8C3479004E0AF3 /* MainWindow.swift */; };
 		E7C6D1992C8C747A004E0AF3 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C6D1982C8C747A004E0AF3 /* ContentView.swift */; };
+		E7ECA1762C8F590300D6C267 /* HotKey in Frameworks */ = {isa = PBXBuildFile; productRef = E7ECA1752C8F590300D6C267 /* HotKey */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +28,7 @@
 		E7C6D1952C8C3479004E0AF3 /* MainWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWindow.swift; sourceTree = "<group>"; };
 		E7C6D1982C8C747A004E0AF3 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		E7C6D1D02C8CA947004E0AF3 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		E7ECA1712C8F470D00D6C267 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -34,6 +36,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E7ECA1762C8F590300D6C267 /* HotKey in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -59,6 +62,7 @@
 		E7C6D1832C8C3381004E0AF3 /* time */ = {
 			isa = PBXGroup;
 			children = (
+				E7ECA1712C8F470D00D6C267 /* Info.plist */,
 				E7C6D1842C8C3381004E0AF3 /* AppDelegate.swift */,
 				E7C6D1952C8C3479004E0AF3 /* MainWindow.swift */,
 				E78C82B22C8D901500FA656B /* fullScreenCoverWindow.swift */,
@@ -88,6 +92,9 @@
 			dependencies = (
 			);
 			name = time;
+			packageProductDependencies = (
+				E7ECA1752C8F590300D6C267 /* HotKey */,
+			);
 			productName = time;
 			productReference = E7C6D1812C8C3381004E0AF3 /* time.app */;
 			productType = "com.apple.product-type.application";
@@ -116,6 +123,9 @@
 				Base,
 			);
 			mainGroup = E7C6D1782C8C3381004E0AF3;
+			packageReferences = (
+				E7ECA1742C8F590300D6C267 /* XCRemoteSwiftPackageReference "HotKey" */,
+			);
 			productRefGroup = E7C6D1822C8C3381004E0AF3 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -283,6 +293,8 @@
 				DEVELOPMENT_TEAM = J8C6W5Z6MT;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = time/Info.plist;
+				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMainStoryboardFile = "";
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
@@ -310,6 +322,8 @@
 				DEVELOPMENT_TEAM = J8C6W5Z6MT;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = time/Info.plist;
+				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMainStoryboardFile = "";
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
@@ -347,6 +361,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		E7ECA1742C8F590300D6C267 /* XCRemoteSwiftPackageReference "HotKey" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/soffes/HotKey";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E7ECA1752C8F590300D6C267 /* HotKey */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E7ECA1742C8F590300D6C267 /* XCRemoteSwiftPackageReference "HotKey" */;
+			productName = HotKey;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = E7C6D1792C8C3381004E0AF3 /* Project object */;
 }

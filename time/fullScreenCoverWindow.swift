@@ -36,9 +36,9 @@ class fullScreenCoverWindow: NSWindow {
 
         // 防止窗口在应用程序失去焦点时隐藏
         self.hidesOnDeactivate = false
-
+        self.backgroundColor = .clear
         // 隐藏菜单栏
-        NSMenu.setMenuBarVisible(false) // 当 fullScreenCoverWindow 全屏时隐藏菜单栏.
+        // NSMenu.setMenuBarVisible(false) // 当 fullScreenCoverWindow 全屏时隐藏菜单栏.
 
         // 可选：如果您希望窗口始终置顶，即使在切换应用程序时也是如此
         // 允许 这个 fullScreenCoverWindow 跑到其它已经 fullscreen 的 app 的桌面里面去把它给挡住 😁
