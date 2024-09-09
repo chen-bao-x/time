@@ -18,41 +18,27 @@ struct RootView: View {
 
 struct ContentView: View {
     @Environment(\.colorScheme) var colorScheme
+
     var body: some View {
-        VStack(spacing: 0) {
-            Button {
-                if appDelegate.mainWindow.backgroundColor == .clear {
-                    appDelegate.mainWindow.backgroundColor = .windowBackgroundColor
-                } else {
-                    appDelegate.mainWindow.backgroundColor = .clear
-                }
+        VStack(spacing: 10) {
 
-            } label: {
-                Text("click")
-            }
-            Group {
-                Text(week(date: Date()))
-                    .foregroundColor(.gray)
+            Text(Date(), style: .time)
+                .font(.custom("SF Compact Display", size: 200).weight(.black).width(.standard))
 
-                Text(Date(), style: .time)
-                    .font(.custom("SF Compact Display", size: 240).weight(.black).width(.standard))
-
-                //                    .font(.system(size: 240, weight: .black, design: .default))
-
-                Text(lunarYearMonthDay(date: Date()))
-                    .font(.system(size: 40, weight: .medium, design: .rounded))
-                    .foregroundColor(.gray)
-
+            HStack {
                 Text(Date(), style: .date)
-                    .foregroundColor(.gray)
+                Text(week(date: Date()))
+                Text(lunarYearMonthDay(date: Date()))
             }
-            .font(.system(size: 60, weight: .bold, design: .rounded))
+            .font(.system(size: 30, weight: .medium, design: .rounded))
+            .foregroundColor(.gray)
             .environment(\.locale, .init(identifier: "zh_CN"))
+
         }
 
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
         .background {
-//            colorScheme == .dark ? Color.black : Color.white
+            //            colorScheme == .dark ? Color.black : Color.white
             // AsyncImage(url: .init(URL(fileURLWithPath: "/Users/chenbao/Downloads/林黛玉武侠图-2.jpeg"))) {
             //     img in
             //     img.resizable()
@@ -63,6 +49,7 @@ struct ContentView: View {
             //     EmptyView()
             // }
         }
+
         .ignoresSafeArea(.all)
     }
 }
@@ -137,7 +124,7 @@ struct WV: View {
         init() {
             let webConfiguration = WKWebViewConfiguration()
             self.webView = WKWebView(frame: .zero, configuration: webConfiguration)
-            self.webView.allowsMagnification = true // 允许双指啮合缩放手势.
+            self.webView.allowsMagnification = true  // 允许双指啮合缩放手势.
         }
 
         func makeNSView(context: Context) -> WKWebView {

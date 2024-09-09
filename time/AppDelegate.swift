@@ -67,7 +67,7 @@ extension AppDelegate {
         _ = NSEvent.addLocalMonitorForEvents(matching: .keyDown) {
             [weak self] event in
 
-            if event.modifierFlags.contains(.command) && event.keyCode == 0 { // Command + Space
+            if event.modifierFlags.contains(.command) && event.keyCode == keycode.t.rawValue  { // Option + T
                 self?.show()
                 return nil // 就是我们需要的快捷键, 截断事件.
             }
