@@ -1,20 +1,32 @@
 //
-//  fullScreenCoverWindow.swift
+//  Winndow.swift
 //  time
 //
-//  Created by chenbao on 9/8/24.
+//  Created by chenbao on 9/10/24.
 //
 
-import AppKit
 import Cocoa
 import SwiftUI
+
+/* --- WindowManager --- */
+
+class WindowManager: NSWindowController {
+    override func windowDidLoad() {
+        super.windowDidLoad()
+        // 在这里进行窗口加载后的初始化
+    }
+
+    // 可以添加其他自定义方法
+}
+
+/* --- fullScreenCoverWindow --- */
 
 class fullScreenCoverWindow: NSWindow {
     init() {
         // 获取屏幕尺寸
         let screen = NSScreen.main ?? NSScreen.screens[0]
 
-        let screenFrame = screen.frame // 这里使用 frame 而不是 visibleFrame
+        let screenFrame = screen.frame  // 这里使用 frame 而不是 visibleFrame
         let fullFrame = NSRect(
             x: screenFrame.origin.x, y: screenFrame.origin.y, width: screenFrame.width,
             height: screenFrame.height)
@@ -22,7 +34,8 @@ class fullScreenCoverWindow: NSWindow {
         super.init(
             contentRect: fullFrame,
             styleMask: [
-                .hudWindow,
+                .hudWindow
+
             ],
             backing: .buffered,
             defer: false
@@ -32,7 +45,7 @@ class fullScreenCoverWindow: NSWindow {
         self.contentView = NSHostingView(rootView: RootView())
 
         // 设置窗口级别为最高
-        self.level = .screenSaver // .screenSaver 的级别太高了, 连 window switcher 都挡住了.
+        self.level = .screenSaver  // .screenSaver 的级别太高了, 连 window switcher 都挡住了.
 
         // 防止窗口在应用程序失去焦点时隐藏
         self.hidesOnDeactivate = false
@@ -66,7 +79,6 @@ class fullScreenCoverWindow: NSWindow {
 //  Copyright © 2020 David Brackeen. All rights reserved.
 //
 // https://github.com/brackeen/calculate-widget/blob/master/Calculate/NSWindow%2BMoveToActiveSpace.swift
-
 extension NSWindow {
     /**
      Moves the window to the active space, allowing it to appear on top of full screen windows.
@@ -80,7 +92,8 @@ extension NSWindow {
             allowOverFullscreen && NSWorkspace.shared.isActiveSpaceFullScreen()
 
         if NSApp.activationPolicy() != .regular || isOnActiveSpace
-            || (!NSApp.isHidden && !isVisible && !willMoveToFullScreenSpace) {
+            || (!NSApp.isHidden && !isVisible && !willMoveToFullScreenSpace)
+        {
             NSApp.activate(ignoringOtherApps: true)
             completion?()
         } else if !NSApp.isHidden && willMoveToFullScreenSpace {
@@ -95,7 +108,7 @@ extension NSWindow {
         }
     }
 
-//    private
+    //    private
 
     func moveToActiveSpaceImpl(
         willMoveToFullScreenSpace: Bool, completion: (() -> Void)? = nil
@@ -139,7 +152,7 @@ extension NSWorkspace {
                 continue
             }
             guard let boundsDict = winInfo[kCGWindowBounds as String] as? [String: Any],
-                  let bounds = CGRect(dictionaryRepresentation: boundsDict as CFDictionary)
+                let bounds = CGRect(dictionaryRepresentation: boundsDict as CFDictionary)
             else {
                 continue
             }
@@ -148,5 +161,55 @@ extension NSWorkspace {
             }
         }
         return false
+    }
+}
+
+/* --- MainWindow --- */
+
+class MainWindow: NSWindow {
+    init() {
+        // 获取屏幕尺寸
+        let screen = NSScreen.main ?? NSScreen.screens[0]
+        let screenSize = screen.visibleFrame.size
+
+        // 计算窗口的合适尺寸
+        let windowWidth = min(screenSize.width * 0.8, 970)
+        let windowHeight = min(screenSize.height * 0.8, 640)
+
+        super.init(
+            contentRect: NSRect(x: 0, y: 0, width: windowWidth, height: windowHeight),
+            styleMask: [
+                .titled,  // 显示标题栏
+                .closable,  // 允许关闭窗口
+                .miniaturizable,  // 允许最小化窗口
+
+                .fullSizeContentView,  // 允许内容视图占据整个窗口，包括标题栏,
+                .resizable,  // 允许调整窗口大小     // frame(maxWidth: .infinity, maxHeight: .infinity)
+                .borderless,  // 无边框
+
+            ],
+            backing: .buffered,
+            defer: false
+        )
+
+        // 设置 titlebarAppearsTransparent 为 true，使标题栏透明
+        self.titlebarAppearsTransparent = true
+        // 让整个窗口都变透明
+        self.isOpaque = false
+
+        //        self.backgroundColor = .clear // 设置成透明的之后会有严重的卡断,
+
+        self.titleVisibility = .hidden  // 设置 titleVisibility 为 .hidden，隐藏标题, 保留 close button
+
+        // 设置最小尺寸
+        self.minSize = NSSize(width: 400, height: 300)
+
+        // 设置 contentView
+        self.contentView = NSHostingView(rootView: RootView())
+
+        // 隐藏左上角的三个 红绿灯 按钮.
+        self.standardWindowButton(.closeButton)?.isHidden = true
+        self.standardWindowButton(.miniaturizeButton)?.isHidden = true
+        self.standardWindowButton(.zoomButton)?.isHidden = true
     }
 }

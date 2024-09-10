@@ -5,6 +5,7 @@
 //  Created by chenbao on 9/7/24.
 //
 
+import Combine
 import SwiftUI
 import WebKit
 
@@ -12,46 +13,54 @@ struct RootView: View {
     var body: some View {
         ContentView()
 
-        // WV()
+        //         WV()
     }
 }
 
 struct ContentView: View {
     @Environment(\.colorScheme) var colorScheme
+    @State var date: Date = .init()
 
     var body: some View {
         VStack(spacing: 10) {
-
-            Text(Date(), style: .time)
+            Text(self.date, style: .time)
                 .font(.custom("SF Compact Display", size: 200).weight(.black).width(.standard))
 
             HStack {
-                Text(Date(), style: .date)
-                Text(week(date: Date()))
-                Text(lunarYearMonthDay(date: Date()))
+                Text(self.date, style: .date)
+                Text(week(date: self.date))
+                Text(lunarYearMonthDay(date: self.date))
             }
             .font(.system(size: 30, weight: .medium, design: .rounded))
             .foregroundColor(.gray)
             .environment(\.locale, .init(identifier: "zh_CN"))
-
         }
-
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
         .background {
-            //            colorScheme == .dark ? Color.black : Color.white
-            // AsyncImage(url: .init(URL(fileURLWithPath: "/Users/chenbao/Downloads/林黛玉武侠图-2.jpeg"))) {
-            //     img in
-            //     img.resizable()
-            //         .scaledToFill()
-
-            // } placeholder: {
-
-            //     EmptyView()
-            // }
+            colorScheme == .dark ? Color.black : Color.white
+            //            AsyncImage(url: .init(URL(fileURLWithPath: "/Users/chenbao/Downloads/林黛玉武侠图-2.jpeg"))) {
+            //                img in
+            //                img.resizable()
+            //                    .scaledToFill()
+            //
+            //            } placeholder: {
+            //                EmptyView()
+            //            }
         }
 
         .ignoresSafeArea(.all)
+        .task {
+            self.timer = Timer.scheduledTimer(
+                withTimeInterval: 1, repeats: true,
+                block: { _ in
+                    self.date = Date()
+                })
+
+            self.timer?.fire()
+        }
     }
+
+    @State private var timer: Timer? = .none
 }
 
 /// 获取农历, 节假日名
@@ -124,7 +133,7 @@ struct WV: View {
         init() {
             let webConfiguration = WKWebViewConfiguration()
             self.webView = WKWebView(frame: .zero, configuration: webConfiguration)
-            self.webView.allowsMagnification = true  // 允许双指啮合缩放手势.
+            self.webView.allowsMagnification = true // 允许双指啮合缩放手势.
         }
 
         func makeNSView(context: Context) -> WKWebView {

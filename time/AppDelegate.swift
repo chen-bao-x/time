@@ -1,4 +1,3 @@
-
 //
 //  AppDelegate.swift
 //  time
@@ -6,6 +5,7 @@
 //  Created by chenbao on 9/7/24.
 //
 //
+
 import AppKit
 import Carbon
 import Cocoa
@@ -13,17 +13,23 @@ import Combine
 import HotKey
 
 class AppDelegate: NSObject, NSApplicationDelegate {
-    var mainWindow: NSWindow! // MainWindow | fullScreenCoverWindow
+    var mainWindow: NSWindow! = fullScreenCoverWindow() // MainWindow | fullScreenCoverWindow
 
     var statusBarItem: NSStatusItem! // 要把添加的到 `NSStatusBar.system` 的 statusBarItem store 起来, 才能在 菜单栏图标区 显示此 app 的 `菜单栏图标`.
 
+    // 系统级全局快捷键
     private var hotKey: HotKey?
 
+    // 窗口组
+    var haha: [WindowManager] = []
+
+    var windowManager: WindowManager
+
     override init() {
+        self.windowManager = .init(window: self.mainWindow)
         super.init()
 
-        self.mainWindow = fullScreenCoverWindow()
-
+        // 注册系统全局快捷键.
         let h = HotKey(keyCombo: KeyCombo(key: .s, modifiers: [.control]))
         h.keyDownHandler = { [weak self] in self?.show() }
         self.hotKey = h
@@ -58,31 +64,29 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     // app deactive 之前调用.
     func applicationWillResignActive(_ notification: Notification) {
         //  如果是 fullScreenCoverWindow 的话,
-        //        if self.mainWindow is fullScreenCoverWindow {
-        //            //  就始终保持 active.
-        //            app.activate(ignoringOtherApps: true)
-        //        }
+        // if self.mainWindow is fullScreenCoverWindow {
+        //     //  就始终保持 active. 直到窗口被隐藏.
+        //     app.activate(ignoringOtherApps: true)
+        // }
     }
 
     func show() {
         // 隐藏菜单栏
         NSMenu.setMenuBarVisible(false) // 当 fullScreenCoverWindow 全屏时隐藏菜单栏.
 
-        self.mainWindow.center() // 将窗口置于屏幕正中间
+        self.windowManager.window?.center() // 将窗口置于屏幕正中间
 
         // 该应用程序不会出现在 Dock 中，也没有菜单栏，但可以通过编程方式或单击其某个窗口来激活它。
-        app.setActivationPolicy(.accessory)
+        //        app.setActivationPolicy(.accessory)
 
-        self.mainWindow.makeKeyAndOrderFront(nil)
-        self.mainWindow.orderFrontRegardless()
+        app.activate(ignoringOtherApps: true)
+        self.windowManager.showWindow(self)
 
-        NSApp.activate(ignoringOtherApps: true)
-
-        app.unhide(nil) // 显示窗口
+        //        app.unhide(nil) // 显示窗口
     }
 
     func hide() {
-        app.hide(nil) // 隐藏窗口
+        self.windowManager.close()
 
         // 显示菜单栏
         NSMenu.setMenuBarVisible(true) // 当 fullScreenCoverWindow 全屏时隐藏菜单栏.
@@ -95,6 +99,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     @objc func option2Action() {
         // 处理选项2的逻辑
+        self.hide()
     }
 }
 
@@ -108,14 +113,14 @@ extension AppDelegate {
             //     systemSymbolName: "command.square.fill", accessibilityDescription: nil)
             //                       button.image = NSImage(
             //                           contentsOf: URL(fileURLWithPath: "/Users/chenbao/Downloads/林黛玉武侠图-2.jpeg"))
-            button.title = "helo"
+            button.title = "time"
         }
 
         let menu = NSMenu(title: "菜单")
         menu.addItem(
-            NSMenuItem(title: "选项1", action: #selector(self.option1Action), keyEquivalent: ""))
+            NSMenuItem(title: "show", action: #selector(self.option1Action), keyEquivalent: ""))
         menu.addItem(
-            NSMenuItem(title: "选项2", action: #selector(self.option2Action), keyEquivalent: ""))
+            NSMenuItem(title: "hide", action: #selector(self.option2Action), keyEquivalent: ""))
         menu.addItem(NSMenuItem.separator())
         menu.addItem(
             NSMenuItem(
