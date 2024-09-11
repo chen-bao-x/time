@@ -50,17 +50,39 @@ struct ContentView: View {
 
         .ignoresSafeArea(.all)
         .task {
-            self.timer = Timer.scheduledTimer(
-                withTimeInterval: 1, repeats: true,
-                block: { _ in
-                    self.date = Date()
-                })
-
-            self.timer?.fire()
+            self.startTimer()
+        }
+        .onReceive(AppDelegate.pub) { (out: AppDelegate.ShowOrHide) in
+            switch out {
+            case .show:
+                self.startTimer()
+            case .hide:
+                self.stopTimer()
+            }
         }
     }
 
     @State private var timer: Timer? = .none
+
+    func startTimer() {
+        self.timer = Timer.scheduledTimer(
+            withTimeInterval: 1, repeats: true,
+            block: { t in
+                self.date = Date()
+                print("timer runing...")
+
+                if self.timer == .none {
+                    t.invalidate()
+                }
+            })
+
+        self.timer?.fire()
+    }
+
+    func stopTimer() {
+        self.timer?.invalidate()
+        self.timer = nil
+    }
 }
 
 /// 获取农历, 节假日名

@@ -11,3 +11,5 @@
 复制到你的 Application 文件夹夹内, 这样就可以同耕哦 Spotlight 或者 Raycast 来打开 time.app 了.
 
 ![image](./preview.jpg)
+
+## 如何使用

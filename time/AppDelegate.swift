@@ -13,17 +13,24 @@ import Combine
 import HotKey
 
 class AppDelegate: NSObject, NSApplicationDelegate {
-    var mainWindow: NSWindow! = fullScreenCoverWindow() // MainWindow | fullScreenCoverWindow
+    var windowManager: WindowManager
 
-    var statusBarItem: NSStatusItem! // 要把添加的到 `NSStatusBar.system` 的 statusBarItem store 起来, 才能在 菜单栏图标区 显示此 app 的 `菜单栏图标`.
+    var mainWindow: NSWindow! = fullScreenCoverWindow()  // MainWindow | fullScreenCoverWindow
+
+    var statusBarItem: NSStatusItem!  // 要把添加的到 `NSStatusBar.system` 的 statusBarItem store 起来, 才能在 菜单栏图标区 显示此 app 的 `菜单栏图标`.
 
     // 系统级全局快捷键
     private var hotKey: HotKey?
 
+    static let pub = PassthroughSubject<ShowOrHide, Never>()
+
+    enum ShowOrHide {
+        case show
+        case hide
+    }
+
     // 窗口组
     var haha: [WindowManager] = []
-
-    var windowManager: WindowManager
 
     override init() {
         self.windowManager = .init(window: self.mainWindow)
@@ -72,24 +79,28 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func show() {
         // 隐藏菜单栏
-        NSMenu.setMenuBarVisible(false) // 当 fullScreenCoverWindow 全屏时隐藏菜单栏.
+        NSMenu.setMenuBarVisible(false)  // 当 fullScreenCoverWindow 全屏时隐藏菜单栏.
 
-        self.windowManager.window?.center() // 将窗口置于屏幕正中间
+        self.windowManager.window?.center()  // 将窗口置于屏幕正中间
 
         // 该应用程序不会出现在 Dock 中，也没有菜单栏，但可以通过编程方式或单击其某个窗口来激活它。
-        //        app.setActivationPolicy(.accessory)
+        // app.setActivationPolicy(.accessory)
 
         app.activate(ignoringOtherApps: true)
         self.windowManager.showWindow(self)
 
-        //        app.unhide(nil) // 显示窗口
+        AppDelegate.pub.send(.show)
     }
 
     func hide() {
         self.windowManager.close()
 
+        // 激活其他应用程序
+        app.hide(nil)
+
         // 显示菜单栏
-        NSMenu.setMenuBarVisible(true) // 当 fullScreenCoverWindow 全屏时隐藏菜单栏.
+        NSMenu.setMenuBarVisible(true)  // 当 fullScreenCoverWindow 全屏时隐藏菜单栏.
+        AppDelegate.pub.send(.hide)
     }
 
     @objc func option1Action() {
@@ -138,29 +149,30 @@ extension AppDelegate {
             // 按下 command + H 隐藏窗口
             if event.modifierFlags.contains(.command) && event.keyCode == keycode.h.rawValue {
                 self?.hide()
-                return nil // 就是我们需要的快捷键, 截断事件.
+                return nil  // 就是我们需要的快捷键, 截断事件.
             }
 
-            if event.modifierFlags.contains(.command) && event.keyCode == keycode.t.rawValue { // Option + T
+            if event.modifierFlags.contains(.command) && event.keyCode == keycode.t.rawValue {  // Option + T
                 self?.show()
-                return nil // 就是我们需要的快捷键, 截断事件.
+                return nil  // 就是我们需要的快捷键, 截断事件.
             }
 
-            if event.modifierFlags.contains(.command) && event.keyCode == keycode.w.rawValue { // Command + Space
+            if event.modifierFlags.contains(.command) && event.keyCode == keycode.w.rawValue {  // Command + Space
                 //                self?.mainWindow.close()
                 self?.hide()
-                return nil // 就是我们需要的快捷键, 截断事件.
+                return nil  // 就是我们需要的快捷键, 截断事件.
             }
 
             if event.modifierFlags.contains([.command, .control])
-                && event.keyCode == keycode.f.rawValue {
+                && event.keyCode == keycode.f.rawValue
+            {
                 self?.mainWindow.toggleFullScreen(nil)
-                return nil // 就是我们需要的快捷键, 截断事件.
+                return nil  // 就是我们需要的快捷键, 截断事件.
             }
 
             if event.modifierFlags.contains([.command]) && event.keyCode == keycode.m.rawValue {
                 self?.mainWindow.miniaturize(nil)
-                return nil // 就是我们需要的快捷键, 截断事件.
+                return nil  // 就是我们需要的快捷键, 截断事件.
             }
 
             // 如果是全屏的话, 按任意键
@@ -176,7 +188,7 @@ extension AppDelegate {
                 return nil
             }
 
-            return event // 不是我们需要的快捷键, 交友其他后续的 monitor 们来处理
+            return event  // 不是我们需要的快捷键, 交友其他后续的 monitor 们来处理
         }
 
         // 鼠标移动到左上角时显示 贯标按钮
